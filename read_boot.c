@@ -1,26 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
-typedef struct {
-    unsigned char first_byte;
-    unsigned char start_chs[3];
-    unsigned char partition_type;
-    unsigned char end_chs[3];
-    char start_sector[4];
-    char length_sectors[4];
-} __attribute((packed)) PartitionTable;
-
-typedef struct {
-    unsigned char jmp[3];
-    char oem[8];
-    unsigned short sector_size; // 2 bytes
-	// {...}  COMPLETAR
-    unsigned int volume_id;
-    char volume_label[11];
-    char fs_type[8]; // Type en ascii
-    char boot_code[448];
-    unsigned short boot_sector_signature;
-} __attribute((packed)) Fat12BootSector;
+#include "fat12.h"
 
 int main() {
     FILE * in = fopen("test.img", "rb");
@@ -28,7 +8,7 @@ int main() {
     PartitionTable pt[4];
     Fat12BootSector bs;
     
-    fseek(in, ... , SEEK_SET); // Ir al inicio de la tabla de particiones. Completar ...
+    fseek(in, BEGIN_PARTITION_TABLE , SEEK_SET);
     fread(pt, sizeof(PartitionTable), 4, in); // leo entradas 
     
     for(i=0; i<4; i++) {        
@@ -50,7 +30,30 @@ int main() {
     printf("  Jump code: %02X:%02X:%02X\n", bs.jmp[0], bs.jmp[1], bs.jmp[2]);
     printf("  OEM code: [%.8s]\n", bs.oem);
     printf("  sector_size: %d\n", bs.sector_size);
-	// {...} COMPLETAR
+
+    printf(" \n");
+    printf("  Inicio de nuevos datos...\n");
+    printf(" \n");
+
+    printf("  sector_cluster: %hhu\n", bs.sectors_by_cluster);
+	printf("  sector_reserverd: %d\n", bs.reserved_sectors);
+	printf("  number_of_fats: %hhu\n", bs.number_of_fats);
+	printf("  root_dir_entries: %d\n", bs.root_dir_entries);
+	printf("  sector_volumen: %d\n", bs.sector_volumen);
+	printf("  descriptor: %hhu\n", bs.descriptor);
+	printf("  sector_fat: %d\n", bs.fat_size_sectors);
+	printf("  sector_track: %d\n", bs.sector_track);
+	printf("  headers: %d\n", bs.headers);
+	printf("  sector_hidden: %u\n", bs.sector_hidden);
+	printf("  sector_partition: %u\n", bs.sector_partition);
+	printf("  physical_device: %hhu\n", bs.physical_device);
+	printf("  current_header: %hhu\n", bs.current_header);
+	printf("  firm: %hhu\n", bs.firm);
+    
+    printf(" \n");
+    printf("  Fin de nuevos datos...\n");
+    printf(" \n");
+
     printf("  volume_id: 0x%08X\n", bs.volume_id);
     printf("  Volume label: [%.11s]\n", bs.volume_label);
     printf("  Filesystem type: [%.8s]\n", bs.fs_type);
