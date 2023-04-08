@@ -56,21 +56,6 @@ int main(int argc, char *argv[])
     fseek(in, BEGIN_PARTITION_TABLE, SEEK_SET);
     fread(pt, sizeof(PartitionTable), 4, in);
 
-    int i;
-    for (i = 0; i < 4; i++)
-    {
-        if (pt[i].partition_type == 1)
-        {
-            break;
-        }
-    }
-
-    if (i == 4)
-    {
-        printf("FAT12 filesystem not found, exiting... \n");
-        return -1;
-    }
-
     // Go to begining of file
     fseek(in, 0, SEEK_SET);
 
@@ -83,6 +68,7 @@ int main(int argc, char *argv[])
 
     // Read root dir searching for the file
     Fat12Entry file_entry;
+    int i;
     int is_found = 0;
     for (i = 0; i < bs.root_dir_entries; i++)
     {
@@ -130,7 +116,7 @@ int main(int argc, char *argv[])
     char buffer[2048];
     fread(buffer, 60, 1, in);
     buffer[60] = 0;
-    printf("%s", buffer);
+    printf("Content: %s.\n", buffer);
 
     fclose(in);
     return 0;
@@ -140,21 +126,21 @@ int main(int argc, char *argv[])
 int file_founded(Fat12Entry *entry, char *file_name, int is_delete)
 {
     char complete_filename[MAX_FAT12_FILENAME_SIZE + 1] = "";
-    char file_name[MAX_FAT12_FILENAME_SIZE + 1];
+    char filename[MAX_FAT12_FILENAME_SIZE + 1];
 
     // Capitalize searched file name
-    strcpy(file_name, file_name);
-    upper(file_name);
+    strcpy(filename, file_name);
+    upper(filename);
 
     // Compare files not deleted
     if (is_delete == 0 && entry->filename[0] != 0x00 && entry->filename[0] != 0xE5 && entry->attributes[0] == 0x20)
     {
         // Get file name
         get_file_name(complete_filename, entry);
-        int find = !strcmp(complete_filename, file_name);
+        int find = !strcmp(complete_filename, filename);
         if (find)
         {
-            printf("File %s not found.\n", complete_filename);
+            printf("File %s found in the filesystem.\n", complete_filename);
         }
         return find;
     }
@@ -166,7 +152,7 @@ int file_founded(Fat12Entry *entry, char *file_name, int is_delete)
         int find = strstr(&complete_filename[1], file_name) != NULL;
         if (find)
         {
-            printf("File %s founded. \n", complete_filename);
+            printf("File %s founded in the filesystem. \n", complete_filename);
         }
         return find;
     }
