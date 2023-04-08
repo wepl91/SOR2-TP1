@@ -10,3 +10,4 @@ all:
 	gcc read_boot.c -o read_boot
 	gcc read_mbr.c -o  read_mbr
 	gcc read_root.c -o read_root
+	gcc read_file.c -o read_file
