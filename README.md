@@ -6,5 +6,5 @@
 #### - Walter Pereyra Lopez
 
 ### Informe
-#### Link al google doc:  https://docs.google.com/document/d/1Fg7QJ_8bRg0ZKvHKcfLKkYK3uoSR2CvdNjAKwiRPE_E/edit?usp=sharing
+#### Link al google doc: https://docs.google.com/document/d/1Fg7QJ_8bRg0ZKvHKcfLKkYK3uoSR2CvdNjAKwiRPE_E/edit?usp=sharing
 
