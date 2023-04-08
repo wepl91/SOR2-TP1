@@ -1,0 +1,1 @@
+bash -c "sudo mount test.img /mnt -o loop,umask=000"

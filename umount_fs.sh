@@ -1,0 +1,1 @@
+bash -c "sudo umount /mnt"
